@@ -1,10 +1,11 @@
+import { useContext } from "react";
+import { UserContext } from "../lib/context";
 import Link from "next/link";
 import Image from "next/image";
 
 // Top navbar:
 export default function Navbar() {
-  const user = null;
-  const username = null;
+  const { user, username } = useContext(UserContext);
 
   return (
     <nav className="navbar">
@@ -27,7 +28,7 @@ export default function Navbar() {
               <Link href={`/${username}`} passHref>
                 <>
                   <Image
-                    src={user?.photoUrl}
+                    src={user?.photoUrl ? user?.photoUrl : "/hacker.png"}
                     width="50px"
                     height="50px"
                     alt="user avatar"
