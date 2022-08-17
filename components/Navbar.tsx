@@ -28,7 +28,7 @@ export default function Navbar() {
               <Link href={`/${username}`} passHref>
                 <>
                   <Image
-                    src={user?.photoUrl ? user?.photoUrl : "/hacker.png"}
+                    src={user?.photoURL ? user?.photoURL : "/hacker.png"}
                     width="50px"
                     height="50px"
                     alt="user avatar"
