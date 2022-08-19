@@ -4,8 +4,8 @@ import {
   collection,
   where,
   query,
-  limit,
   getDocs,
+  Timestamp,
 } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getStorage } from "firebase/storage";
@@ -65,6 +65,9 @@ const postToJSON = (doc) => {
   };
 };
 
+// Convertting a Firestore timestamp to a number.
+const fromMillis = Timestamp.fromMillis;
+
 export {
   firestore,
   auth,
@@ -72,4 +75,5 @@ export {
   storage,
   getUserWithUsername,
   postToJSON,
+  fromMillis,
 };
