@@ -33,6 +33,10 @@ export async function getServerSideProps({ query: _query }) {
       limit(5)
     );
     posts = (await getDocs(q)).docs.map(postToJSON);
+  } else {
+    return {
+      notFound: true,
+    };
   }
 
   return {
