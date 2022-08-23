@@ -6,6 +6,8 @@ import {
   query,
   getDocs,
   Timestamp,
+  serverTimestamp,
+  DocumentSnapshot,
 } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getStorage } from "firebase/storage";
@@ -41,7 +43,7 @@ const storage = getStorage();
  * @param  {string} username
  */
 
-const getUserWithUsername = async (username) => {
+const getUserWithUsername = async (username: string) => {
   const q = query(
     collection(firestore, "users"),
     where("username", "==", username)
@@ -54,19 +56,22 @@ const getUserWithUsername = async (username) => {
  * Converts a firestore document to JSON
  * @param  {DocumentSnapshot} doc
  */
-const postToJSON = (doc) => {
+const postToJSON = (doc: DocumentSnapshot) => {
   const data = doc.data();
 
   return {
     ...data,
     // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
-    createdAt: data.createdAt.toMillis(),
-    updatedAt: data.updatedAt.toMillis(),
+    createdAt: data?.createdAt.toMillis(),
+    updatedAt: data?.updatedAt.toMillis(),
   };
 };
 
 // Convertting a Firestore timestamp to a number.
 const fromMillis = Timestamp.fromMillis;
+
+// The server timestamp ensures data time-based data will be consistent for all users.
+const firestoreTimestamp = serverTimestamp;
 
 export {
   firestore,
@@ -76,4 +81,5 @@ export {
   getUserWithUsername,
   postToJSON,
   fromMillis,
+  firestoreTimestamp,
 };
