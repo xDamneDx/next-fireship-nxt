@@ -13,6 +13,7 @@ import styles from "../../styles/Admin.module.css";
 
 // Components:
 import AuthCheck from "../../components/AuthCheck";
+import ImageUploader from "../../components/ImageUploader";
 
 export default function AdminPostEdit() {
   return (
@@ -93,6 +94,8 @@ function PostForm({ defaultValues, postRef, preview }) {
       )}
 
       <div className={preview ? styles.hidden : styles.controls}>
+        <ImageUploader />
+
         <textarea
           {...register("content", {
             maxLength: { value: 20000, message: "content is too long" },
