@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { auth, firestore } from "../lib/firebase";
+import { auth, storage } from "../lib/firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 // Components:
 import Loader from "./Loader";
@@ -9,6 +10,44 @@ export default function ImageUploader() {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [downloadURL, setDownloadURL] = useState(null);
+
+  // Creates a Firebase Upload Task
+  const uploadFile = async (e) => {
+    // Get the file
+    const file = Array.from(e.target.files)[0];
+    const extension = file.type.split("/")[1];
+
+    // Makes reference to the storage bucket location
+    const metadata = {
+      contentType: file.type,
+    };
+
+    const storageRef = ref(
+      storage,
+      `uploads/${auth.currentUser?.uid}/${Date.now()}.${extension}`
+    );
+    setUploading(true);
+
+    // Starts the upload
+    const task = uploadBytesResumable(storageRef, file, metadata);
+
+    // Listen to updates to upload task
+    task.on("state_changed", (snapshot) => {
+      const pct = (
+        (snapshot.bytesTransferred / snapshot.totalBytes) *
+        100
+      ).toFixed(0);
+      setProgress(pct);
+
+      // Get downloadURL AFTER task resolves (Note: this is not a native Promise)
+      task
+        .then(() => getDownloadURL(task.snapshot.ref))
+        .then((url) => {
+          setDownloadURL(url);
+          setUploading(false);
+        });
+    });
+  };
 
   return (
     <div className="box">
