@@ -16,7 +16,7 @@ import PostFeed from "../components/PostFeed";
 import Loader from "../components/Loader";
 
 // Max post to query per page
-const LIMIT = 1;
+const LIMIT = 4;
 
 export async function getServerSideProps() {
   const postsQuery = query(
